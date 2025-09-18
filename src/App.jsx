@@ -24,6 +24,7 @@ function App() {
     },
   ]);
 
+  // Marca ou desmarca uma task como concluída
   function onTaskClick(taskId) {
     const newTasks = tasks.map((task) => {
       if (task.id === taskId) {
@@ -35,18 +36,37 @@ function App() {
     setTasks(newTasks);
   }
 
+  // Remove uma task
   const onDeleteTaskClick = (taskId) => {
     const newTasks = tasks.filter((task) => task.id !== taskId);
     setTasks(newTasks);
   };
 
+  // Adiciona uma nova task
+  function onAddTaskSubimit(title, description) {
+    const newTask = {
+      // Gera um id único com base no maior id existente
+      id: tasks.length > 0 ? Math.max(...tasks.map((t) => t.id)) + 1 : 1,
+      title: title,
+      description: description,
+      isCompleted: false,
+    };
+
+    // Atualiza o estado de forma correta (spread operator)
+    setTasks([...tasks, newTask]);
+  }
+
   return (
     <div className="w-screen h-screen bg-slate-500 flex justify-center p-6">
-      <div className="w-[500px]">
+      <div className="w-[500px] space-y-4">
         <h1 className="text-3xl text-slate-100 font-bold text-center">
           Gerenciar tarefas
         </h1>
-        <AddTasks />
+
+        {/* Componente para adicionar novas tarefas */}
+        <AddTasks onAddTaskSubimit={onAddTaskSubimit} />
+
+        {/* Lista de tarefas */}
         <Tasks
           tasks={tasks}
           onTaskClick={onTaskClick}
